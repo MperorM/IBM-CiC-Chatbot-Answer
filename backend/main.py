@@ -6,6 +6,39 @@ import ast
 
 BUCKETNAME = 'bewhaos.appspot.com'
 KEYWORDSFILE = 'keywords.txt'
+UNEXPECTED_QUERIES_FILE = "unexpected_queries.txt"
+
+def check_for_keywords(message, keywords):
+    """Checks for keywords
+    Args:
+        message: String
+    Returns:
+        closest keyword if one exists else None
+    """
+
+    # fuzzywuzzy uses Levenshtein distance to check for keywords in a string
+    closest_match = process.extractOne(message, keywords, score_cutoff=80)
+    if closest_match:
+        return closest_match[0]
+    else:
+        return None
+
+def retrieve_keywords():
+    """
+    Queries google cloud storage for keyword/answer pairs
+    Returns:
+        list of (String, String) tuples with keyword/answer pairs for chatbot to use
+    """
+    keywordpair_string = storage.download_blob(BUCKETNAME, KEYWORDSFILE)
+    keywordpair_list = ast.literal_eval(keywordpair_string)
+    return keywordpair_list
+
+def upload_unexpected_response(message):
+    # get list of unexpected queries and append new unexpected query
+    unexpected_queries = storage.download_blob(BUCKETNAME, UNEXPECTED_QUERIES_FILE)
+    unexpected_queries += f"{message}|"
+    # upload new array to storage
+    storage.upload_blob(BUCKETNAME, unexpected_queries, UNEXPECTED_QUERIES_FILE)
 
 def receive_message(request):
     """Responds to any HTTP request.
@@ -14,31 +47,6 @@ def receive_message(request):
     Returns:
         The response text in json format
     """
-
-    def check_for_keywords(message, keywords):
-        """Checks for keywords
-        Args:
-            message: String
-        Returns:
-            closest keyword if one exists else None
-        """
-
-        # fuzzywuzzy uses Levenshtein distance to check for keywords in a string
-        closest_match = process.extractOne(message, keywords, score_cutoff=80)
-        if closest_match:
-            return closest_match[0]
-        else:
-            return None
-
-    def retrieve_keywords():
-        """
-        Queries google cloud storage for keyword/answer pairs
-        Returns:
-            list of (String, String) tuples with keyword/answer pairs for chatbot to use
-        """
-        keywordpair_string = storage.download_blob(BUCKETNAME, KEYWORDSFILE)
-        keywordpair_list = ast.literal_eval(keywordpair_string)
-        return keywordpair_list
     
     keywordpairs: str = retrieve_keywords()
     keywords = [i[0] for i in keywordpairs]
@@ -48,7 +56,7 @@ def receive_message(request):
 
         keyword = check_for_keywords(message, keywords)
         if keyword:
-            # find index of matched keyword and return corresponding message
+            # finds index of matched keyword and returns corresponding message
             response = keywordpairs[keywords.index(keyword)][1]
 
             # special cases
@@ -61,6 +69,7 @@ def receive_message(request):
                 response = f'I currently am trained to respond to the following keywords: {keywords}'
         else:
             response = 'I don\'t know how to answer that :('
+            upload_unexpected_response(message)
 
         response = jsonify(response)
 
@@ -68,6 +77,7 @@ def receive_message(request):
         response.headers.set('Access-Control-Allow-Origin', '*')
         response.headers.set('Access-Control-Allow-Methods', 'GET, POST')
         return response
+
 
 def update_keywords(request):
     """Responds to any HTTP request.
@@ -102,3 +112,21 @@ def update_keywords(request):
 
     else:
         return 'failure - wrong arguments'
+
+def get_unexpected_queries(request):
+    """Responds to any HTTP request.
+    Args:
+        request (flask.Request): HTTP request object.
+    Returns:
+        A text file full of unexpected queries
+    """
+
+    # download and jsonify response
+    retval = storage.download_blob(BUCKETNAME, UNEXPECTED_QUERIES_FILE)
+    retval = jsonify(retval)
+
+    # allow CORS for GET and POST requests
+    retval.headers.set('Access-Control-Allow-Origin', '*')
+    retval.headers.set('Access-Control-Allow-Methods', 'GET, POST')
+
+    return retval

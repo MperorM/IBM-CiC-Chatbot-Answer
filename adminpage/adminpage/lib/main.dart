@@ -48,8 +48,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  TextEditingController keyvalue_controller = new TextEditingController();
-  TextEditingController response_controller = new TextEditingController();
+  TextEditingController keyvalueController = new TextEditingController();
+  TextEditingController responseController = new TextEditingController();
+  List<String> unexpectedQueries = ['loading unexpected queries'];
+
+  @override
+  void initState() {
+    _getUnexpectedQueries();
+    super.initState();
+  }
+
+  void _getUnexpectedQueries() async {
+    http.Response queries = await http.get('https://us-central1-bewhaos.cloudfunctions.net/get_unexpected_queries');
+    unexpectedQueries = queries.body.split('|');
+    print(unexpectedQueries);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Padding(
-          padding: const EdgeInsets.all(300.0),
+          padding: const EdgeInsets.all(200.0),
           child: Column(
             // Column is also a layout widget. It takes a list of children and
             // arranges them vertically. By default, it sizes itself to fit its
@@ -86,13 +100,28 @@ class _MyHomePageState extends State<MyHomePage> {
             // axis because Columns are vertical (the cross axis would be
             // horizontal).
             mainAxisAlignment: MainAxisAlignment.center,
+
             children: <Widget>[
+              Text("Below is a scrollable list of unexpected queries the user last typed"),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: unexpectedQueries.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text('${unexpectedQueries[index]}'),
+                    );
+                  },
+                ),
+              ),
+
+              Padding(padding: EdgeInsets.all(5)),
+
               Text("here you can add a keyword the chatbot should pick up, along with the answer it should give when it receives the intent"),
 
               Padding(padding: EdgeInsets.all(5)),
 
               TextFormField(
-                controller: keyvalue_controller,
+                controller: keyvalueController,
                 textAlign: TextAlign.center,
                 decoration: new InputDecoration(
                   hintText: 'keyvalue: nails',
@@ -116,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Padding(padding: EdgeInsets.all(5)),
 
               TextFormField(
-                controller: response_controller,
+                controller: responseController,
                 textAlign: TextAlign.center,
                 decoration: new InputDecoration(
                   hintText: "Response: nails can be found in isle 5",
@@ -139,17 +168,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
               Builder(builder: (context) => RaisedButton(
                 onPressed: () async {
-                  if (keyvalue_controller.text == '' || response_controller.text == '') {
+                  if (keyvalueController.text == '' || responseController.text == '') {
                       Scaffold.of(context).showSnackBar(
                         new SnackBar(
                                 content: Text('please add a keyvalue and the chatbots response'),
                                 duration: Duration(seconds: 3),
                         ));
                   } else {
-                    http.Response upload_status = await http.get('https://us-central1-bewhaos.cloudfunctions.net/update_keywords?keyword=' + keyvalue_controller.text + '&message=' + response_controller.text);
+                    http.Response upload_status = await http.get('https://us-central1-bewhaos.cloudfunctions.net/update_keywords?keyword=' + keyvalueController.text + '&message=' + responseController.text);
                     if (upload_status.body == '"success"') {
-                      keyvalue_controller.clear();
-                      response_controller.clear();
+                      keyvalueController.clear();
+                      responseController.clear();
                       Scaffold.of(context).showSnackBar(
                         new SnackBar(
                                 content: Text('Sucessfully added keyword and response to chatbot'),
