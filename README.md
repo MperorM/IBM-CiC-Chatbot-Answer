@@ -24,6 +24,9 @@ The backend runs in Google Cloud. I am used to IBM Cloud, but Flutter has great 
 It is written in python 3.7 using Google Cloud Functions, which more or less is a glorified flask-api. The great part about Cloud Functions is that it scales automatically. While I have placed limits on how far it can scale to spare my wallet. The current implementation automatically scales up and down depending on usage, with the potential to scale up very fast.
 ## Database
 The database is two .txt files in Gcloud storage. Going forward a proper nosql or sql database would be a vast improvement. The current implementation will run into a myriad of scaling and concurrency issues. It has no upsides except ease of development.
+## Overview
+![Architecture](https://github.com/MperorM/IBM-CiC-Chatbot-Answer/blob/master/architecture.png)
+
 ## Bad-hacks FAQ
 
 ### Q: Why are there two flutter apps?
