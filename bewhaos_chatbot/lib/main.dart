@@ -48,7 +48,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String chatbot_reply = 'Hej, mit navn er Frank. Hvad kan jeg hjælpe dig med?';
+  String chatbot_reply = 'Hi, I\'m Archibald. What can I help you with?';
   TextEditingController _controller = new TextEditingController();
 
   @override
@@ -93,12 +93,16 @@ class _MyHomePageState extends State<MyHomePage> {
               controller: _controller,
               textAlign: TextAlign.center,
               decoration: new InputDecoration.collapsed(
-                hintText: 'Skriv til Frank'
+                hintText: 'Ask Archibald a question'
               ),
               onFieldSubmitted: (String text) async {
-                http.Response Frank_response = await http.get('https://europe-west3-bewhaos.cloudfunctions.net/function-1?message=' + text);
-                print(Frank_response);
-                _controller.clear();
+                if (text != '') {
+                  http.Response Frank_response = await http.get('https://us-central1-bewhaos.cloudfunctions.net/receive_message?message=' + text);
+                  setState(() {
+                    chatbot_reply = new String.fromCharCodes(Frank_response.bodyBytes);
+                  });
+                  _controller.clear();
+                };
               },
             )
           ],

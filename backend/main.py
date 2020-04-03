@@ -17,7 +17,7 @@ def receive_message(request):
             closest keyword if one exists else None
         """
 
-        keywords = ['hammer', 'motorsav']
+        keywords = ['hammer', 'chainsaw']
         
         # fuzzywuzzy uses Levenshtein distance to check for keywords in a string
         closest_match = process.extractOne(message, keywords, score_cutoff=70)
@@ -29,15 +29,16 @@ def receive_message(request):
     
     if request.args and 'message' in request.args:
         message = request.args.get('message')
+
         keyword = check_for_keywords(message)
         if keyword:
             #TODO: this business logic should reside elsewhere
             if keyword == 'hammer':
-                response = "Her kan du finde vores konkurrents bedste hamre: https://www.bauhaus.dk/catalogsearch/result/?q=hammer"
-            elif keyword == 'motorsav':
-                response = "vi har desværre ingen motorsave til salg :("
+                response = "Here you can find our competitors best hammers: https://www.bauhaus.dk/catalogsearch/result/?q=hammer"
+            elif keyword == 'chainsaw':
+                response = "We unfortunately have no chainsaws currently for sale"
         else:
-            response = "Det kan jeg desværre ikke svare på :("
+            response = "I don't know how to answer that :("
 
         response = jsonify(response)
 

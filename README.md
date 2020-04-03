@@ -1,5 +1,10 @@
 # IBM-CiC-Chatbot-Answer
-Answer to the IBM Client innovation center interview question #3
+Solution to the IBM Client innovation center interview question #3
+
+goto:
+https://bewhaos.web.app
+
+and ask all the questions your heart desires. It currently picks up on words resembling the following keywords: "hammer", "chainsaw"
 
 # Technology stack
 ## Frontend
