@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // horizontal).
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text("Add response to keyword"),
+              Text("here you can add a keyword the chatbot should pick up, along with the answer it should give when it receives the intent"),
 
               Padding(padding: EdgeInsets.all(5)),
 

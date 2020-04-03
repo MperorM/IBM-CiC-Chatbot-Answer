@@ -15,9 +15,6 @@ def receive_message(request):
         The response text in json format
     """
 
-    # # list of keywords chatbot picks up and responds to
-    # keywords = ['hammer', 'screwdriver', 'weather', 'goodbye', 'hello', 'hi', 'help']
-        
     def check_for_keywords(message, keywords):
         """Checks for keywords
         Args:
