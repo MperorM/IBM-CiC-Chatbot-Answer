@@ -24243,7 +24243,7 @@ $it:1}
 P.Cb.prototype={}
 P.Cc.prototype={}
 F.wn.prototype={
-L:function(a){return new S.oy(new F.oN("Bewhaos",null),"Flutter Demo",X.Ws(null,C.wr),null)}}
+L:function(a){return new S.oy(new F.oN("Bewhaos - Ask Archibald",null),"Bewhaos A/S",X.Ws(null,C.wr),null)}}
 F.oN.prototype={
 aG:function(){return new F.B9(new D.lJ(C.mx,new R.ag(H.c([],u.u),u.A)),C.p)}}
 F.B9.prototype={

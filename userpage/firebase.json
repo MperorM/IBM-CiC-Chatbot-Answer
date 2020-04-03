@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "bewhaos",
     "public": "public",
     "ignore": [
       "firebase.json",
