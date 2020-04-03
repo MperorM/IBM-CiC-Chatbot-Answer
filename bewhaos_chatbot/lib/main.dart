@@ -48,7 +48,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String chatbot_reply = 'Hi, I\'m Archibald. What can I help you with?';
+  String chatbot_reply = 'I\'m Archibald, what can I help you with?';
   TextEditingController _controller = new TextEditingController();
 
   @override
@@ -97,8 +97,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               onFieldSubmitted: (String text) async {
                 if (text != '') {
+                  setState(() {
+                    chatbot_reply = "let me think about that";
+                  });
                   http.Response Frank_response = await http.get('https://us-central1-bewhaos.cloudfunctions.net/receive_message?message=' + text);
                   setState(() {
+                    // . BUG: uuid: 5e566d3c-75cc-11ea-af35-acde48001122
+                    // description: Special characters are currently not rendered correctly
                     chatbot_reply = new String.fromCharCodes(Frank_response.bodyBytes);
                   });
                   _controller.clear();
