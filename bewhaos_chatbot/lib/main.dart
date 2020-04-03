@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http; 
+
 
 void main() {
   runApp(MyApp());
@@ -93,8 +95,9 @@ class _MyHomePageState extends State<MyHomePage> {
               decoration: new InputDecoration.collapsed(
                 hintText: 'Skriv til Frank'
               ),
-              onFieldSubmitted: (String text) {
-                print(text);
+              onFieldSubmitted: (String text) async {
+                http.Response Frank_response = await http.get('https://europe-west3-bewhaos.cloudfunctions.net/function-1?message=' + text);
+                print(Frank_response);
                 _controller.clear();
               },
             )
