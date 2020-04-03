@@ -1,0 +1,1 @@
+[('hammer', 'Our webshop is currently down (and will be for the foreseeable future) but they are located in isle 5 of our physical store'), ('screwdriver', 'We unfortunately have no screwdrivers in stock'), ('goodbye', 'Goodbye, it was nice to meet you!'), ('hello', 'Hi!'), ('hi', 'Hi!'), ('location', 'our store is on fictionalstreet 84'), ('weather', ''), ('help', '')]
