@@ -1,0 +1,14 @@
+# all known bugs are collected here with a description and unique id
+# search project for the uuid to find best place to start debugging
+
+1.
+Description: Special characters are currently not rendered correctly, this causes issues with danish characters and the degree symbol for the weather answer.
+uuid: 5e566d3c-75cc-11ea-af35-acde48001122
+
+2.
+Description: Weather always returns answers based on nightly weather.
+uuid: 6dde835c-75cc-11ea-af35-acde48001122
+
+3.
+Description: Test environment for google cloud functions is not working correctly
+uuid: 7ec99102-75cc-11ea-af35-acde48001122
