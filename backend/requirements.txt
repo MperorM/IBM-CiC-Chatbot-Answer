@@ -2,3 +2,5 @@
 # package>=version
 flask
 fuzzywuzzy
+-e git://github.com/MperorM/weather_forecast#egg=weather_forecast
+google-cloud-storage
